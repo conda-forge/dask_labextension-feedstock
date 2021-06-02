@@ -37,6 +37,7 @@ Installing `dask-labextension` from the `conda-forge` channel can be achieved by
 
 ```
 conda config --add channels conda-forge
+conda config --set channel_priority strict
 ```
 
 Once the `conda-forge` channel has been enabled, `dask-labextension, dask_labextension` can be installed with:
