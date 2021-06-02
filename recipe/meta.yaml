@@ -9,7 +9,7 @@ source:
   sha256: 3166d47075eb1a5243942000fc2604b0d9b3f3966026c1ff3eb3060492fba964
 
 build:
-  number: 1
+  number: 2
   noarch: python
 
 outputs:
@@ -20,14 +20,13 @@ outputs:
       host:
         - python >=3.6
         - pip
-        - nodejs >=12
-        - jupyter-packaging >=0.7.0,<0.8
+        - jupyter-packaging <1
       run:
         - python >=3.6
         - bokeh >=1.0.0,!=2.0.0
         - distributed >=1.24.1
         - jupyter-server-proxy >=1.3.2
-        - jupyterlab >=3.0.0
+        - jupyterlab >=3.0.0,<4
     test:
       imports:
         - dask_labextension
@@ -35,6 +34,11 @@ outputs:
         - pip
       commands:
         - pip check
+        - jupyter labextension list
+        - jupyter labextension list 1>labextensions 2>&1
+        - cat labextensions | grep "dask-labextension.*OK.*dask_labextension"  # [unix]
+        - dir %PREFIX%\share\jupyter\labextensions\dask-labextension\schemas\dask-labextension\plugin.json || exit 1  # [win]
+        - ls ${PREFIX}/share/jupyter/labextensions/dask-labextension/schemas/dask-labextension/plugin.json  # [not win]
 
   - name: dask_labextension
     build:
