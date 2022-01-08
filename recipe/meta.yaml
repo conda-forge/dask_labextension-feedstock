@@ -55,7 +55,7 @@ about:
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
-  summary: A Jupyter Notebook server extension manages Dask clusters
+  summary: A JupyterLab extension for Dask.
 
 extra:
   recipe-maintainers:
