@@ -7,7 +7,7 @@ Package license: BSD-3-Clause
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/dask_labextension-feedstock/blob/master/LICENSE.txt)
 
-Summary: A Jupyter Notebook server extension manages Dask clusters
+Summary: A JupyterLab extension for Dask.
 
 Current build status
 ====================
