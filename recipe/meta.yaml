@@ -1,4 +1,4 @@
-{% set version = "5.1.0" %}
+{% set version = "5.2.0" %}
 
 package:
   name: dask-labextension
@@ -6,10 +6,10 @@ package:
 
 source:
   url: https://pypi.io/packages/source/d/dask_labextension/dask_labextension-{{ version }}.tar.gz
-  sha256: bc476e8040428f9b141e44126d2ae17173ff8b10968ca25375441eff6f2c2279
+  sha256: c51952c3bbbb7b7d6280bfd9e537dc7b849fd3eda37faac7a3a30f4ea06cb2cc
 
 build:
-  number: 1
+  number: 0
   noarch: python
 
 outputs:
