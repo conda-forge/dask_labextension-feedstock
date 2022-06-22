@@ -9,7 +9,7 @@ source:
   sha256: ff722654e6e23baaad0f8b97216a25b1fad668fd86ec02088a1222a225d1ce80
 
 build:
-  number: 0
+  number: 1
   noarch: python
 
 outputs:
@@ -54,7 +54,9 @@ about:
   home: https://github.com/dask/dask-labextension
   license: BSD-3-Clause
   license_family: BSD
-  license_file: LICENSE
+  license_file:
+    - LICENSE
+    - dask_labextension/labextension/static/third-party-licenses.json
   summary: A JupyterLab extension for Dask.
 
 extra:
