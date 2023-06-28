@@ -1,11 +1,11 @@
-About dask-labextension
-=======================
+About dask-labextension-feedstock
+=================================
+
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/dask_labextension-feedstock/blob/main/LICENSE.txt)
 
 Home: https://github.com/dask/dask-labextension
 
 Package license: BSD-3-Clause
-
-Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/dask_labextension-feedstock/blob/main/LICENSE.txt)
 
 Summary: A JupyterLab extension for Dask.
 

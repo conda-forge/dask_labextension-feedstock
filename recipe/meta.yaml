@@ -9,7 +9,7 @@ source:
   sha256: 397cf6f2106650954c3f3bf84fe269a4fb72fb6bf56e6089c75cc3bbf9ff12ae
 
 build:
-  number: 0
+  number: 1
   noarch: python
 
 outputs:
@@ -26,7 +26,7 @@ outputs:
         - bokeh >=1.0.0,!=2.0.0
         - distributed >=1.24.1
         - jupyter-server-proxy >=1.3.2
-        - jupyterlab >=3.0.0
+        - jupyterlab >=3.0.0,<4
     test:
       imports:
         - dask_labextension
