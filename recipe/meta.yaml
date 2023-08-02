@@ -18,25 +18,26 @@ outputs:
     script: build_base.sh  # [not win]
     requirements:
       host:
-        - python >=3.6
-        - pip
         - jupyter-packaging
-      run:
+        - pip
         - python >=3.6
+      run:
         - bokeh >=1.0.0,!=2.0.0
         - distributed >=1.24.1
         - jupyter-server-proxy >=1.3.2
-        - jupyterlab >=3.0.0
+        - jupyterlab >=3.0.0,<4
+        - python >=3.6
     test:
       imports:
         - dask_labextension
       requires:
+        - m2-grep  # [win]
         - pip
       commands:
         - pip check
         - jupyter labextension list
         - jupyter labextension list 1>labextensions 2>&1
-        - cat labextensions | grep "dask-labextension.*OK.*dask_labextension"  # [unix]
+        - cat labextensions | grep -iE "dask-labextension.*OK.*dask_labextension" 
         - dir %PREFIX%\share\jupyter\labextensions\dask-labextension\schemas\dask-labextension\plugin.json || exit 1  # [win]
         - ls ${PREFIX}/share/jupyter/labextensions/dask-labextension/schemas/dask-labextension/plugin.json  # [not win]
 
@@ -45,7 +46,7 @@ outputs:
       noarch: generic
     requirements:
       run:
-        - {{ pin_subpackage('dask-labextension', max_pin="x.x.x") }}
+        - {{ pin_subpackage('dask-labextension', max_pin='x.x.x') }}
     test:
       imports:
         - dask_labextension
