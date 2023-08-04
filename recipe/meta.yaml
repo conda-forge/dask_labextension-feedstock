@@ -1,4 +1,4 @@
-{% set version = "6.2.0" %}
+{% set version = "7.0.0" %}
 
 package:
   name: dask-labextension-split
@@ -6,9 +6,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/d/dask_labextension/dask_labextension-{{ version }}.tar.gz
-  sha256: 1c6864e57ea0f854e0d65649342d4bc8ca830ee255a087cf770f52ac56cda753
-  patches:
-    - 0000-no-setup-py-npm.patch
+  sha256: 45a60bd0ad31c5e425986b7e40a5aa242aa582ea868025ac2b82d0aa16ffcb8a
 
 build:
   number: 0
@@ -16,9 +14,9 @@ build:
 
 requirements:
   host:
-    - python >=3.6
+    - python >=3.8
   run:
-    - python >=3.6
+    - python >=3.8
 
 outputs:
   - name: dask-labextension
@@ -28,15 +26,18 @@ outputs:
       - {{ PYTHON }} -m pip install --no-deps -vv --no-build-isolation .
     requirements:
       host:
-        - jupyter-packaging
+        - hatch-jupyter-builder >=0.5
+        - hatchling
+        - hatch-nodejs-version
+        - jupyterlab >=4.0.0,<5
         - pip
-        - python >=3.6
+        - python >=3.8
       run:
         - bokeh >=1.0.0,!=2.0.0
         - distributed >=1.24.1
         - jupyter-server-proxy >=1.3.2
-        - jupyterlab >=3.0.0,<4
-        - python >=3.6
+        - jupyterlab >=4.0.0,<5
+        - python >=3.8
     test:
       imports:
         - dask_labextension
@@ -46,8 +47,11 @@ outputs:
       commands:
         - pip check
         - jupyter labextension list
+        - jupyter server extension list
         - jupyter labextension list 1>labextensions 2>&1
-        - cat labextensions | grep -iE "dask-labextension.*OK.*dask_labextension"
+        - jupyter server extension list 1>server_extensions 2>&1
+        - grep -iE "dask-labextension.*OK.*dask_labextension" labextensions
+        - grep -iE "dask_labextension.*OK" server_extensions
         - dir %PREFIX%\share\jupyter\labextensions\dask-labextension\schemas\dask-labextension\plugin.json || exit 1  # [win]
         - ls ${PREFIX}/share/jupyter/labextensions/dask-labextension/schemas/dask-labextension/plugin.json  # [not win]
 
@@ -56,9 +60,9 @@ outputs:
       noarch: python
     requirements:
       host:
-        - python >=3.6
+        - python >=3.8
       run:
-        - python >=3.6
+        - python >=3.8
         - {{ pin_subpackage('dask-labextension', max_pin='x.x.x') }}
     test:
       imports:
