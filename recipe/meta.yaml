@@ -1,21 +1,31 @@
 {% set version = "6.2.0" %}
 
 package:
-  name: dask-labextension
+  name: dask-labextension-split
   version: {{ version }}
 
 source:
   url: https://pypi.io/packages/source/d/dask_labextension/dask_labextension-{{ version }}.tar.gz
   sha256: 1c6864e57ea0f854e0d65649342d4bc8ca830ee255a087cf770f52ac56cda753
+  patches:
+    - 0000-no-setup-py-npm.patch
 
 build:
   number: 0
   noarch: python
 
+requirements:
+  host:
+    - python >=3.6
+  run:
+    - python >=3.6
+
 outputs:
   - name: dask-labextension
-    script: build_base.bat  # [win]
-    script: build_base.sh  # [not win]
+    build:
+      noarch: python
+      script:
+      - {{ PYTHON }} -m pip install --no-deps -vv --no-build-isolation .
     requirements:
       host:
         - jupyter-packaging
@@ -37,15 +47,18 @@ outputs:
         - pip check
         - jupyter labextension list
         - jupyter labextension list 1>labextensions 2>&1
-        - cat labextensions | grep -iE "dask-labextension.*OK.*dask_labextension" 
+        - cat labextensions | grep -iE "dask-labextension.*OK.*dask_labextension"
         - dir %PREFIX%\share\jupyter\labextensions\dask-labextension\schemas\dask-labextension\plugin.json || exit 1  # [win]
         - ls ${PREFIX}/share/jupyter/labextensions/dask-labextension/schemas/dask-labextension/plugin.json  # [not win]
 
   - name: dask_labextension
     build:
-      noarch: generic
+      noarch: python
     requirements:
+      host:
+        - python >=3.6
       run:
+        - python >=3.6
         - {{ pin_subpackage('dask-labextension', max_pin='x.x.x') }}
     test:
       imports:
@@ -61,6 +74,7 @@ about:
   summary: A JupyterLab extension for Dask.
 
 extra:
+  feedstock-name: dask-labextension
   recipe-maintainers:
     - xhochy
     - ocefpaf
