@@ -1,0 +1,111 @@
+diff --git a/setup.py b/setup.py
+index c1822d5..78f651d 100644
+--- a/setup.py
++++ b/setup.py
+@@ -4,80 +4,53 @@ dask_labextension setup
+ import os
+ import setuptools
+ import sys
+-
+-from jupyter_packaging import (
+-    create_cmdclass,
+-    install_npm,
+-    ensure_targets,
+-    combine_commands,
+-)
+-
+-# ensure the current directory is on sys.path
+-# so versioneer can be imported when pip uses
+-# PEP 517/518 build rules.
+-# https://github.com/python-versioneer/python-versioneer/issues/193
+-sys.path.append(os.path.dirname(__file__))
+-
+-import versioneer
++from pathlib import Path
+ 
+ HERE = os.path.abspath(os.path.dirname(__file__))
+ 
+ # The name of the project
+ name = "dask_labextension"
+ 
+-# Get our version
+-version = versioneer.get_version()
+-
+ lab_path = os.path.join(HERE, name, "labextension")
+ 
+-# Representative files that should exist after a successful build
+-jstargets = [
+-    os.path.join(HERE, "lib", "index.js"),
+-    os.path.join(lab_path, "package.json"),
+-]
+-
+-package_data_spec = {name: ["*"]}
+-
+ labext_name = "dask-labextension"
+ 
++share = "share/jupyter/labextensions/%s" % labext_name
++
+ data_files_spec = [
+-    ("share/jupyter/labextensions/%s" % labext_name, lab_path, "**"),
+-    ("share/jupyter/labextensions/%s" % labext_name, HERE, "install.json"),
++    *[
++        (
++            f"""{share}/{p.parent.relative_to(lab_path).as_posix()}""",
++            [p.relative_to(HERE).as_posix()]
++        )
++        for p in sorted(Path(lab_path).rglob("*")) if not p.is_dir()
++    ],
++    (
++        share,
++        ["install.json"]
++    ),
+     (
+         "etc/jupyter/jupyter_server_config.d",
+-        "jupyter-config/jupyter_server_config.d",
+-        "dask_labextension.json",
++        ["jupyter-config/jupyter_server_config.d/dask_labextension.json"],
+     ),
+     (
+         "etc/jupyter/jupyter_notebook_config.d",
+-        "jupyter-config/jupyter_notebook_config.d",
+-        "dask_labextension.json",
++        ["jupyter-config/jupyter_notebook_config.d/dask_labextension.json"],
+     ),
+ ]
+ 
+-cmdclass = versioneer.get_cmdclass(
+-    create_cmdclass(
+-        "jsdeps", package_data_spec=package_data_spec, data_files_spec=data_files_spec
+-    )
+-)
+-
+-cmdclass["jsdeps"] = combine_commands(
+-    install_npm(HERE, build_cmd="build:prod", npm=["jlpm"]),
+-    ensure_targets(jstargets),
+-)
+ 
+-with open("README.md", "r") as fh:
++with open("README.md", "r", encoding="utf-8") as fh:
+     long_description = fh.read()
+ 
+ setup_args = dict(
+     name=name,
+-    version=version,
++    version=os.environ["PKG_VERSION"],
+     url="https://github.com/dask/dask-labextension",
+     author="Ian Rose, Matt Rocklin, Jacob Tomlinson",
+     description="A JupyterLab extension for Dask.",
+     long_description=long_description,
+     long_description_content_type="text/markdown",
+-    cmdclass=cmdclass,
+     packages=setuptools.find_packages(),
+     install_requires=[
+         "bokeh >=1.0.0,!=2.0.0",
+@@ -100,6 +73,7 @@ setup_args = dict(
+         "Programming Language :: Python :: 3.8",
+         "Framework :: Jupyter",
+     ],
++    data_files=data_files_spec
+ )
+ 
+ 
